@@ -12,8 +12,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Create Tag & Push
+      - id: create_tag_push
+        name: Create Tag & Push
         run: |
           tag_name="$(date +%Y%m%d_%H%M%S)"
           git tag $tag_name
           git push origin $tag_name
+          run: echo "::set-output name=tag_name::$tag_name"
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          draft: true
+          tag_name: ${{ steps.create_tag_push.outputs.tag_name }}
+          generate_release_notes: true
