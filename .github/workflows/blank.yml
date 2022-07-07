@@ -35,7 +35,7 @@ jobs:
           gh api --method POST \
             -H "Accept: application/vnd.github+json" \
             /repos/ry-itto-playground/github-actions-tag-playground/releases \
-            -f tag_name=$tag_name \
+            -f tag_name="$tag_name" \
             -f name="Release $tag_name" \
-            -f body=$release_note \
+            -f body="$release_note" \
             -F draft=true
