@@ -23,7 +23,8 @@ jobs:
           git tag $tag_name
           git push origin $tag_name
           
-          echo "::set-output name=tag_names::[$tag_name]"
+          tag_names='${{ toJSON([$tag_name]) }}'
+          echo "::set-output name=tag_names::$tag_names"
 
   create_release:
     needs: create_tag
@@ -35,12 +36,14 @@ jobs:
       - id: generate_release_note
         name: Generate Release Note
         run: |
+          previous_tag_name=''
+        
           # Generate Release note
           release_note=`gh api \
             --method POST \
             -H "Accept: application/vnd.github+json" \
             /repos/${{ github.repository }}/releases/generate-notes \
-            -f tag_name=$tag_name \
+            -f tag_name=${{ matrix.tag_name }} \
             -f previous_tag_name=$previous_tag_name | jq '.body'`
             
           echo "::set-output name=release_note::$release_note"
