@@ -36,6 +36,7 @@ jobs:
       matrix:
         tag_name: ${{ fromJson(needs.create_tag.outputs.tag_names) }}
     steps:
+      - uses: actions/checkout@v3
       - id: generate_release_note
         name: Generate Release Note
         env:
@@ -44,19 +45,15 @@ jobs:
           previous_tag_name=''
         
           # Generate Release note
-          release_note=`gh api \
+          gh api \
             --method POST \
             -H "Accept: application/vnd.github+json" \
             /repos/${{ github.repository }}/releases/generate-notes \
             -f tag_name=${{ matrix.tag_name }} \
-            -f previous_tag_name=$previous_tag_name | jq '.body' | tr -d '"'`
-            
-          echo "::set-output name=release_note::$release_note"
-      - run: |
-          echo ${{ steps.generate_release_note.outputs.release_note }}
+            -f previous_tag_name=$previous_tag_name | jq '.body' | tr -d '"' > RELEASE_NOTE.md
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ matrix.tag_name }}
-          body: ${{ steps.generate_release_note.outputs.release_note }}
+          body_path: RELEASE_NOTE.md
           draft: true
