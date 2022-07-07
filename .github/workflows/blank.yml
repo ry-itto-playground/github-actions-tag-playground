@@ -23,7 +23,7 @@ jobs:
           git tag $tag_name
           git push origin $tag_name
           
-          tag_names='${{ toJSON("[$tag_name]") }}'
+          tag_names="[$tag_name]"
           echo "::set-output name=tag_names::$tag_names"
 
   create_release:
