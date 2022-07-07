@@ -27,7 +27,8 @@ jobs:
           done
           
           joined_tag_names="[$(IFS=","; echo ${tag_names[*]})]"
-          echo "::set-output name=tag_names::$joined_tag_names"
+          echo $joined_tag_names
+          echo "::set-output name=tag_names::'$joined_tag_names'"
 
   create_release:
     needs: create_tag
