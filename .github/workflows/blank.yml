@@ -50,7 +50,7 @@ jobs:
             -H "Accept: application/vnd.github+json" \
             /repos/${{ github.repository }}/releases/generate-notes \
             -f tag_name=${{ matrix.tag_name }} \
-            -f previous_tag_name=$previous_tag_name | jq '.body' | tr -d '"' > RELEASE_NOTE.md
+            -f previous_tag_name=$previous_tag_name | jq -r '.body' | tr -d '"' > RELEASE_NOTE.md
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
