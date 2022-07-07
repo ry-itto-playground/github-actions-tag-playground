@@ -49,7 +49,7 @@ jobs:
             -H "Accept: application/vnd.github+json" \
             /repos/${{ github.repository }}/releases/generate-notes \
             -f tag_name=${{ matrix.tag_name }} \
-            -f previous_tag_name=$previous_tag_name | jq -r '.body'`
+            -f previous_tag_name=$previous_tag_name | jq '.body | @json'`
             
           echo "::set-output name=release_note::$release_note"
       - run: |
