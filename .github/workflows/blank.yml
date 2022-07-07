@@ -51,7 +51,7 @@ jobs:
             -f tag_name=${{ matrix.tag_name }} \
             -f previous_tag_name=$previous_tag_name | jq '.body'`
             
-          echo "::set-output name=release_note::'$release_note'"
+          echo "::set-output name=release_note::$release_note"
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
