@@ -52,6 +52,8 @@ jobs:
             -f previous_tag_name=$previous_tag_name | jq -r '.body'`
             
           echo "::set-output name=release_note::$release_note"
+      - run: |
+          echo ${{ steps.generate_release_note.outputs.release_note }}
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
