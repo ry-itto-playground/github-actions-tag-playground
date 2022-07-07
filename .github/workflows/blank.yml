@@ -18,10 +18,20 @@ jobs:
           tag_name="$(date +%Y%m%d_%H%M%S)"
           git tag $tag_name
           git push origin $tag_name
-          echo "::set-output name=tag_name::$tag_name"
-      - name: Create Release
-        uses: softprops/action-gh-release@v1
-        with:
-          draft: true
-          tag_name: ${{ steps.create_tag_push.outputs.tag_name }}
-          generate_release_notes: true
+          
+          # Generate Release note
+          release_note=`gh api \
+            --method POST \
+            -H "Accept: application/vnd.github+json" \
+            /repos/ry-itto-playground/github-actions-tag-playground/releases/generate-notes \
+            -f tag_name=$tag_name \
+            -f previous_tag_name=$previous_tag_name | jq '.body'`
+
+          # Create draft release
+          gh api --method POST \
+            -H "Accept: application/vnd.github+json" \
+            /repos/ry-itto-playground/github-actions-tag-playground/releases \
+            -f tag_name=$tag_name \
+            -f name="Release $tag_name" \
+            -f body=$release_note \
+            -F draft=true
