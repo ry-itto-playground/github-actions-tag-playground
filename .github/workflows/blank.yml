@@ -8,8 +8,10 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  create_tag:
     runs-on: ubuntu-latest
+    outputs:
+      tag_names: ${{ steps.set-matrix.outputs.tag_names }}
     steps:
       - uses: actions/checkout@v3
       - id: create_tag_push
@@ -21,6 +23,18 @@ jobs:
           git tag $tag_name
           git push origin $tag_name
           
+          echo "::set-output name=tag_names::[$tag_name]"
+
+  create_release:
+    needs: create_tag
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        tag_name: ${{ fromJson(needs.create_tag.outputs.tag_names) }}
+    steps:
+      - id: generate_release_note
+        name: Generate Release Note
+        run: |
           # Generate Release note
           release_note=`gh api \
             --method POST \
@@ -29,13 +43,10 @@ jobs:
             -f tag_name=$tag_name \
             -f previous_tag_name=$previous_tag_name | jq '.body'`
             
-          echo $release_note
-
-          # Create draft release
-          gh api --method POST \
-            -H "Accept: application/vnd.github+json" \
-            /repos/${{ github.repository }}/releases \
-            -f tag_name="$tag_name" \
-            -f name="Release $tag_name" \
-            -f body="$release_note" \
-            -F draft=true
+          echo "::set-output name=release_note::$release_note"
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ matrix.tag_name }}
+          body: ${{ steps.generate_release_note.outputs.release_note }}
+          draft: true
