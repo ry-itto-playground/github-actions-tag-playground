@@ -58,6 +58,5 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ matrix.tag_name }}
-          body: |
-            ${{ steps.generate_release_note.outputs.release_note }}
+          body: ${{ steps.generate_release_note.outputs.release_note }}
           draft: true
