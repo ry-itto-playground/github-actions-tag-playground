@@ -23,7 +23,7 @@ jobs:
             tag_name="$(date +%Y%m%d_%H%M%S)$var"
             git tag $tag_name
             git push origin $tag_name
-            tag_names+=($tag_name)
+            tag_names+=(${'tag_name'})
           done
           
           joined_tag_names="$(IFS=,; echo "[${tag_names[*]}]")"
