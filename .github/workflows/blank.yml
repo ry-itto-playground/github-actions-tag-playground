@@ -17,12 +17,17 @@ jobs:
       - id: create_tag_push
         name: Create Tag & Push
         run: |
-          tag_name="$(date +%Y%m%d_%H%M%S)"
-          git tag $tag_name
-          git push origin $tag_name
+          tag_names=()
+          for var in 1 2
+          do
+            tag_name="$(date +%Y%m%d_%H%M%S)"
+            git tag $tag_name
+            git push origin $tag_name
+            tag_names+=('$tag_name')
+          done
           
-          tag_names="['$tag_name']"
-          echo "::set-output name=tag_names::$tag_names"
+          joined_tag_names="[$(IFS=","; echo "${tag_names[*]}")]"
+          echo "::set-output name=tag_names::$joined_tag_names"
 
   create_release:
     needs: create_tag
