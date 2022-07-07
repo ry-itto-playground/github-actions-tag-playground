@@ -28,6 +28,8 @@ jobs:
             /repos/ry-itto-playground/github-actions-tag-playground/releases/generate-notes \
             -f tag_name=$tag_name \
             -f previous_tag_name=$previous_tag_name | jq '.body'`
+            
+          echo $release_note
 
           # Create draft release
           gh api --method POST \
