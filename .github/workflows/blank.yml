@@ -25,7 +25,7 @@ jobs:
           release_note=`gh api \
             --method POST \
             -H "Accept: application/vnd.github+json" \
-            /repos/ry-itto-playground/github-actions-tag-playground/releases/generate-notes \
+            /repos/${{ github.repository }}/releases/generate-notes \
             -f tag_name=$tag_name \
             -f previous_tag_name=$previous_tag_name | jq '.body'`
             
@@ -34,7 +34,7 @@ jobs:
           # Create draft release
           gh api --method POST \
             -H "Accept: application/vnd.github+json" \
-            /repos/ry-itto-playground/github-actions-tag-playground/releases \
+            /repos/${{ github.repository }}/releases \
             -f tag_name="$tag_name" \
             -f name="Release $tag_name" \
             -f body="$release_note" \
