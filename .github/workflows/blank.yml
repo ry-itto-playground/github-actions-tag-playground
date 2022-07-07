@@ -23,12 +23,10 @@ jobs:
             tag_name="$(date +%Y%m%d_%H%M%S)$var"
             git tag $tag_name
             git push origin $tag_name
-            tag_names+=("'$tag_name'")
+            tag_names+=($tag_name)
           done
           
-          echo $SHELL
           joined_tag_names="$(IFS=,; echo "[${tag_names[*]}]")"
-          echo $joined_tag_names
           echo "::set-output name=tag_names::$joined_tag_names"
 
   create_release:
