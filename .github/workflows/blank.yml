@@ -50,9 +50,16 @@ jobs:
             /repos/${{ github.repository }}/releases/generate-notes \
             -f tag_name=${{ matrix.tag_name }} \
             -f previous_tag_name=$previous_tag_name | jq -r '.body' | tr -d '"' > RELEASE_NOTE.md
+      - id: load_release_name
+        name: Load release name
+        run: |
+          service_name=$(cat tmp/hoge/a.json | jq -r .release_name)
+          
+          echo "::set-output name=service_name::$release_name"
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
+          name: ${{ format('{0} {1}', steps.load_release_name.outputs.release_name, matrix.tag_name) }}
           tag_name: ${{ matrix.tag_name }}
           body_path: RELEASE_NOTE.md
           draft: true
