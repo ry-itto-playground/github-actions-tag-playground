@@ -55,7 +55,7 @@ jobs:
         run: |
           release_name=$(cat tmp/hoge/a.json | jq -r .release_name)
           
-          echo "::set-output name=service_name::$release_name"
+          echo "::set-output name=release_name::$release_name"
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
