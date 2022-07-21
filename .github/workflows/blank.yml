@@ -53,6 +53,7 @@ jobs:
       - id: load_release_name
         name: Load release name
         run: |
+          tag_name=${{ matrix.tag_name }}
           echo $tag_name | awk -F '_' '{print $1}'
           release_name=$(cat tmp/hoge/a.json | jq -r .release_name)
           
