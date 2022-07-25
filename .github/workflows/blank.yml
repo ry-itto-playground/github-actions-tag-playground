@@ -15,6 +15,7 @@ jobs:
       - id: create_tag_push
         name: Create Tag & Push
         run: |
+          git log
           git show --name-only --format="format:" HEAD
           tag_names=()
           for var in 1 2
