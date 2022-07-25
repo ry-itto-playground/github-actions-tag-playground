@@ -3,7 +3,6 @@ name: CI
 on:
   push:
     branches: [ "main" ]
-    paths: ["**/.env"]
   workflow_dispatch:
 
 jobs:
@@ -16,7 +15,7 @@ jobs:
       - id: create_tag_push
         name: Create Tag & Push
         run: |
-          git show --name-only --format="format:"
+          git show --name-only --format="format:" HEAD
           tag_names=()
           for var in 1 2
           do
