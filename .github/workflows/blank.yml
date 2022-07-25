@@ -12,6 +12,8 @@ jobs:
       tag_names: ${{ steps.create_tag_push.outputs.tag_names }}
     steps:
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
       - id: create_tag_push
         name: Create Tag & Push
         run: |
