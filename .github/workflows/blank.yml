@@ -39,6 +39,8 @@ jobs:
         tag_name: ${{ fromJson(needs.create_tag.outputs.tag_names) }}
     steps:
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
       - id: generate_release_note
         name: Generate Release Note
         env:
